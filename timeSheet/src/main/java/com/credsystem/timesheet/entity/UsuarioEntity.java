@@ -10,15 +10,13 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import com.credsystem.timesheet.exeption.TimeSheetExeption;
 
-@Document
-public class Usuario {
-
-	
+@Document(collection="Usuario")
+public class UsuarioEntity {
 
 	private String nome;
 	private Double valorHora;
 	@DBRef
-	private List<TimeSheet> timeSheets = new ArrayList<>();
+	private List<TimeSheetEntity> timeSheets = new ArrayList<>();
 	@Id
 	private String usuario;
 	private String senha;
@@ -40,11 +38,11 @@ public class Usuario {
 		this.valorHora = valorHora;
 	}
 
-	public List<TimeSheet> getTimeSheets() {
+	public List<TimeSheetEntity> getTimeSheets() {
 		return timeSheets;
 	}
 
-	public void setTimeSheets(List<TimeSheet> timeSheets) {
+	public void setTimeSheets(List<TimeSheetEntity> timeSheets) {
 		this.timeSheets = timeSheets;
 	}
 
@@ -64,15 +62,15 @@ public class Usuario {
 		this.senha = senha;
 	}
 
-	public void addTimeSheet(TimeSheet timeSheet) throws TimeSheetExeption {
+	public void addTimeSheet(TimeSheetEntity timeSheet) throws TimeSheetExeption {
 
 		if (timeSheets.contains(timeSheet))
-			throw new TimeSheetExeption("timesheet ja contem na lista");
+			throw TimeSheetExeption.mensagemTimeSheetExistente(timeSheet);
 		timeSheets.add(timeSheet);
 	}
 
-	public TimeSheet getTimeSheetPorAnoMes(int ano, int mes)  {
-		Optional<TimeSheet> cotemUmTimeSheet = getTimeSheets().stream()
+	public TimeSheetEntity getTimeSheetPorAnoMes(int ano, int mes)  {
+		Optional<TimeSheetEntity> cotemUmTimeSheet = getTimeSheets().stream()
 				.filter(ts -> ts.getAno().equals(ano) && ts.getMes().equals(mes)).findFirst();
 		return cotemUmTimeSheet.isPresent() ? cotemUmTimeSheet.get() : null;
 	}

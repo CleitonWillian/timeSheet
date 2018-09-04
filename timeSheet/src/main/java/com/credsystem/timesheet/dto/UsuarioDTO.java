@@ -1,7 +1,6 @@
 package com.credsystem.timesheet.dto;
 
 public class UsuarioDTO {
-
 	
 	private String usuario;
 	private String nome;

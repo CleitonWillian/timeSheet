@@ -1,4 +1,4 @@
-package com.credsystem.timesheet.rest;
+package com.credsystem.timesheet.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

@@ -6,26 +6,30 @@ import java.util.List;
 
 import com.credsystem.timesheet.util.DataUtil;
 
-public class DiaDeTrabalho {
+public class DiaDeTrabalhoEntity {
 
-	private LocalDateTime dia;
+	private Integer dia;
 	private List<LocalDateTime> historico;
 	private String resumo;
 
-	public DiaDeTrabalho() {
+	public DiaDeTrabalhoEntity() {
 	}
 
-	public DiaDeTrabalho(LocalDateTime dia) {
-		this.dia = dia;
+	public DiaDeTrabalhoEntity(LocalDateTime dia) {
+		this.dia = dia.getDayOfMonth();
 
 	}
 
-	public LocalDateTime getDia() {
+	public Integer getDia() {
 		return dia;
 	}
 
-	public void setDia(LocalDateTime dia) {
+	public void setDia(Integer dia) {
 		this.dia = dia;
+	}
+	
+	public void setDia(LocalDateTime dia) {
+		this.dia = dia.getDayOfMonth();
 	}
 
 	public List<LocalDateTime> getHistorico() {

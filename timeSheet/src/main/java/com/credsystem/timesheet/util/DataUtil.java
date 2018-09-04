@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 
 import com.credsystem.timesheet.dto.DiaDeTrabalhoDTO;
 import com.credsystem.timesheet.exeption.DataExeption;
+import com.credsystem.timesheet.exeption.constant.DataMsgEnum;
 
 public class DataUtil {
 
@@ -20,7 +21,7 @@ public class DataUtil {
 	
 	public static LocalDateTime agora() {
 		LocalDateTime now = LocalDateTime.now();
-		return LocalDateTime.of(now.getYear(), now.getMonthValue(), now.getDayOfYear(), now.getHour(), now.getMinute());
+		return LocalDateTime.of(now.getYear(), now.getMonthValue(), now.getDayOfMonth(), now.getHour(), now.getMinute());
 		
 	}
 	
@@ -52,24 +53,35 @@ public class DataUtil {
 	}
 	
 	public static boolean comparaPontos(LocalDateTime ponto, LocalDateTime ld) {
-		return ld.getHour()== ponto.getHour() && ld.getMinute() == ponto.getMinute();
+		return funcaoComparOsPontos(ponto.getHour(), ponto.getMinute(), ld);
 	}
 	
 	public static boolean comparaPontos(DiaDeTrabalhoDTO data, LocalDateTime ld) {
-		return ld.getHour()== data.getHora() && ld.getMinute() == data.getMinuto();
+		return funcaoComparOsPontos(data.getHora(), data.getMinuto(), ld);
 	}
 
-	
+	private static  boolean funcaoComparOsPontos(int hora, int minuto, LocalDateTime ld) {
+		return ld.getHour()== hora && ld.getMinute() == minuto;
+	}
 	public static Integer validaMes(Integer mes) throws DataExeption {
 		
 		if(mes != null && (mes<1 || mes >12 || mes > LocalDateTime.now().getMonthValue()))
-			throw new DataExeption("Mes invalido");
+			throw new DataExeption(DataMsgEnum.MES_INVALIDO);
 		return mes != null ? mes : LocalDateTime.now().getMonthValue();
 	}
 
 	public static Integer validaAno(Integer ano)throws DataExeption {
 		if(ano != null && ano > LocalDateTime.now().getYear())
-			throw new DataExeption("Ano invalido");
+			throw new DataExeption(DataMsgEnum.ANO_INVALIDO);
 		return ano != null ? ano : LocalDateTime.now().getYear();
+	}
+	
+	public static String getHorario(DiaDeTrabalhoDTO diaDeTrabalho) {
+		var builder = new StringBuilder();
+		builder
+		.append(diaDeTrabalho.getHora())
+		.append(" : ")
+		.append(diaDeTrabalho.getMinuto());
+		return builder.toString();
 	}
 }

@@ -4,17 +4,17 @@ import java.time.LocalDateTime;
 
 public class ErroDTO {
 
-	private LocalDateTime data;
+	private String tipo;
 	private String menssagem;
 	private String detalhe;
-	private String erro;
+	private LocalDateTime data;
 
-	public ErroDTO(LocalDateTime timestamp, String message, String details, String erro) {
+	public ErroDTO(LocalDateTime timestamp, String message, String details, String tipo) {
 		super();
 		this.data = timestamp;
 		this.menssagem = message;
 		this.detalhe = details;
-		this.erro = erro;
+		this.tipo = tipo;
 	}
 
 	public LocalDateTime getData() {
@@ -29,8 +29,8 @@ public class ErroDTO {
 		return detalhe;
 	}
 
-	public String getErro() {
-		return erro;
+	public String getTipo() {
+		return tipo;
 	}
 
 }

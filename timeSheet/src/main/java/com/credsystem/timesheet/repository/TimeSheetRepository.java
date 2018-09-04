@@ -5,15 +5,15 @@ import java.util.List;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 
-import com.credsystem.timesheet.entity.TimeSheet;
+import com.credsystem.timesheet.entity.TimeSheetEntity;
 
-public interface TimeSheetRepository extends MongoRepository<TimeSheet, String> {
+public interface TimeSheetRepository extends MongoRepository<TimeSheetEntity, String> {
 
 	@Query("{usuario: ?0, ano: ?1, mes :?2 }")
-	TimeSheet find(String id,int ano, int mes);
+	TimeSheetEntity find(String id,int ano, int mes);
 
 	@Query("{usuario: ?0 }")
-	List<TimeSheet> find(String id);
+	List<TimeSheetEntity> find(String id);
 	
 	
 }

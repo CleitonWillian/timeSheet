@@ -14,7 +14,8 @@ public class DiaDeTrabalhoDTO {
 	private String resumo;
 
 	@JsonCreator
-	public DiaDeTrabalhoDTO(@JsonProperty(value = "dia", required = true) Integer dia,
+	public DiaDeTrabalhoDTO(
+			@JsonProperty(value = "dia", required = true) Integer dia,
 			@JsonProperty(value = "hora", required = true) Integer hora,
 			@JsonProperty(value = "minuto", required = true) Integer minuto,
 			@JsonProperty(value = "resumo", required = false) String resumo) {

@@ -1,9 +1,10 @@
 package com.credsystem.timesheet.service.impl;
 
+import static com.credsystem.timesheet.util.DataUtil.agora;
+import static com.credsystem.timesheet.util.DataUtil.comparaPontos;
+import static com.credsystem.timesheet.util.DataUtil.getHorario;
 import static com.credsystem.timesheet.util.DataUtil.validaAno;
 import static com.credsystem.timesheet.util.DataUtil.validaMes;
-import static com.credsystem.timesheet.util.DataUtil.comparaPontos;
-import static com.credsystem.timesheet.util.DataUtil.agora;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -12,9 +13,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.credsystem.timesheet.dto.DiaDeTrabalhoDTO;
-import com.credsystem.timesheet.entity.TimeSheet;
+import com.credsystem.timesheet.entity.TimeSheetEntity;
 import com.credsystem.timesheet.exeption.DataExeption;
 import com.credsystem.timesheet.exeption.TimeSheetExeption;
+import com.credsystem.timesheet.exeption.UsuarioExeption;
 import com.credsystem.timesheet.repository.TimeSheetRepository;
 import com.credsystem.timesheet.service.TimeSheetService;
 
@@ -25,7 +27,7 @@ public class TimeSheetServiceImpl implements TimeSheetService {
 	TimeSheetRepository timeSheetRepository;
 
 	@Override
-	public TimeSheet buscarTimeSheet(Integer ano, Integer mes, String id) throws DataExeption {
+	public TimeSheetEntity buscarTimeSheet(Integer ano, Integer mes, String id) throws DataExeption {
 
 		ano = validaAno(ano);
 		mes = validaMes(mes);
@@ -33,8 +35,11 @@ public class TimeSheetServiceImpl implements TimeSheetService {
 	}
 
 	@Override
-	public List<TimeSheet> buscarTimeSheets(Integer ano, Integer mes, String id) {
-		return timeSheetRepository.find(id);
+	public List<TimeSheetEntity> buscarTimeSheets(Integer ano, Integer mes, String id) throws UsuarioExeption {
+		var listaTimesheet = timeSheetRepository.find(id);
+		if(listaTimesheet.isEmpty())
+			throw UsuarioExeption.usuarioNaoExiste(id);
+		return listaTimesheet;
 	}
 
 	@Override
@@ -49,7 +54,7 @@ public class TimeSheetServiceImpl implements TimeSheetService {
 		var timeSheet = timeSheetRepository.find(id, ano, mes);
 
 		if (timeSheet == null)
-			timeSheet = TimeSheet.create(id, mes, ano);
+			timeSheet = TimeSheetEntity.create(id, mes, ano);
 
 		var diaDeTrabalho = timeSheet.getDiaDeTrabalho(dateTime.getDayOfMonth());
 		diaDeTrabalho.setResumo(data != null ? data.getResumo() : null);
@@ -64,7 +69,7 @@ public class TimeSheetServiceImpl implements TimeSheetService {
 		var timeSheetOpt = timeSheetRepository.findById(timeSheetId);
 
 		if (!timeSheetOpt.isPresent())
-			throw new TimeSheetExeption("Não foi possivel encontrar o timesheet" + timeSheetId);
+			throw TimeSheetExeption.mensagemTimeSheetNaoEncontrado(timeSheetId);
 
 		var timeSheet = timeSheetOpt.get();
 
@@ -75,8 +80,7 @@ public class TimeSheetServiceImpl implements TimeSheetService {
 		historico.removeIf(h -> comparaPontos(data, h));
 
 		if (naoHouveMudancaNoHistorico(historico.size(), sizeInicial))
-			throw new TimeSheetExeption(
-					"Não contem nenhum ponto com o horario " + data + " para remover no timeSheet: " + timeSheetId);
+			throw TimeSheetExeption.mensagemPontoNaoEncontrado(getHorario(data), timeSheetId);
 
 		timeSheetRepository.save(timeSheet);
 

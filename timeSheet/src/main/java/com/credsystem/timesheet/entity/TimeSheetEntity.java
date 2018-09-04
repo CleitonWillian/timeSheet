@@ -10,47 +10,47 @@ import java.util.List;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document
-public class TimeSheet {
+@Document(collection="TimeSheet" )
+public class TimeSheetEntity {
 
 	@Id
 	private String objectId;
-	private List<DiaDeTrabalho> diasDeTrabalho;
+	private List<DiaDeTrabalhoEntity> diasDeTrabalho;
 	private Integer mes;
 	private Integer ano;
 	private String usuario;
 
-	public static TimeSheet create(String usuario) {
+	public static TimeSheetEntity create(String usuario) {
 		var instante = agora();
-		return new TimeSheet(usuario,instante.getMonthValue(), instante.getYear());
+		return new TimeSheetEntity(usuario,instante.getMonthValue(), instante.getYear());
 
 	}
 
-	public static TimeSheet create(String usuario,int mes, int ano) {
-		return new TimeSheet(usuario,mes, ano);
-
-	}
-	
-	public static TimeSheet create(Usuario usuario,int mes, int ano) {
-		return new TimeSheet(usuario.getUsuario(),mes, ano);
-
-	}
-
-	public static TimeSheet create(String usuario,LocalDateTime dateTime) {
-		return new TimeSheet(usuario,dateTime.getMonthValue(), dateTime.getYear());
+	public static TimeSheetEntity create(String usuario,int mes, int ano) {
+		return new TimeSheetEntity(usuario,mes, ano);
 
 	}
 	
-	private TimeSheet() {
+	public static TimeSheetEntity create(UsuarioEntity usuario,int mes, int ano) {
+		return new TimeSheetEntity(usuario.getUsuario(),mes, ano);
+
 	}
 
-	private TimeSheet(String usuario,int mes, int ano) {
+	public static TimeSheetEntity create(String usuario,LocalDateTime dateTime) {
+		return new TimeSheetEntity(usuario,dateTime.getMonthValue(), dateTime.getYear());
+
+	}
+	
+	private TimeSheetEntity() {
+	}
+
+	private TimeSheetEntity(String usuario,int mes, int ano) {
 		super();
 		this.usuario = usuario;
 		this.mes = mes;
 		this.ano = ano;
 		getDiasDoMes(ano, mes).
-		forEach(dia -> getDiasDeTrabalho().add(new DiaDeTrabalho(dia.atStartOfDay()))
+		forEach(dia -> getDiasDeTrabalho().add(new DiaDeTrabalhoEntity(dia.atStartOfDay()))
 
 		);
 
@@ -66,16 +66,16 @@ public class TimeSheet {
 	
 	
 	
-	public void setDiasDeTrabalho(List<DiaDeTrabalho> diasDeTrabalho) {
+	public void setDiasDeTrabalho(List<DiaDeTrabalhoEntity> diasDeTrabalho) {
 		this.diasDeTrabalho = diasDeTrabalho;
 	}
 
 
-	public List<DiaDeTrabalho> getDiasDeTrabalho() {
+	public List<DiaDeTrabalhoEntity> getDiasDeTrabalho() {
 		return diasDeTrabalho==null? diasDeTrabalho = new ArrayList<>():diasDeTrabalho;
 	}
 
-	public DiaDeTrabalho getDiaDeTrabalho(int dia) {
+	public DiaDeTrabalhoEntity getDiaDeTrabalho(int dia) {
 		return getDiasDeTrabalho().get(dia - 1);
 
 	}
@@ -91,7 +91,7 @@ public class TimeSheet {
 	}
 
 	
-	public void setUsuario(Usuario usuario) {
+	public void setUsuario(UsuarioEntity usuario) {
 		this.usuario = usuario.getUsuario();
 	}
 
@@ -128,7 +128,7 @@ public class TimeSheet {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		TimeSheet other = (TimeSheet) obj;
+		TimeSheetEntity other = (TimeSheetEntity) obj;
 		return (ano == other.ano && mes == other.mes);
 	}
 
