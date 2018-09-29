@@ -29,7 +29,6 @@ public class UsuarioServiceImpl implements UsuarioService {
 
 	
 		var usuario = usuarioRepository.find(usuarioDto.getUsuario());
-		System.out.println(usuarioDto.getUsuario());
 		
 		if (usuario == null)
 			salvaNovoUsuario(usuarioDto);
